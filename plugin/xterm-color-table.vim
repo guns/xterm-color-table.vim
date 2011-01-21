@@ -40,10 +40,6 @@ function! <SID>ColorRow(start, end) "{{{
 endfunction "}}}
 
 function! <SID>XtermColorTable(write) "{{{
-    if has('ownsyntax')
-        ownsyntax off
-    endif
-
     highlight clear | syntax clear
 
     let rows = []
