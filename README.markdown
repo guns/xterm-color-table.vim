@@ -19,7 +19,7 @@ NOTES:
 
 SCREENSHOTS:
 
- * TODO: Screenshot goes here
+![xterm-color-table](http://guns.github.com/xterm-color-table.vim/images/xterm-color-table.png)
 
 INSPIRED BY:
 
