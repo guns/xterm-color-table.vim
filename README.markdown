@@ -1,0 +1,27 @@
+
+     __   __)              )   ___                  ______)
+    (,  |/                (__/_____)    /)         (, /       /)  /)
+        |  _/_  _  __ ___   /       ___// _____      /   _   (/_ //  _
+     ) /|_ (___(/_/ (_// (_/       (_)(/_(_)/ (_  ) /   (_(_/_) (/__(/_
+    (_/                   (______)               (_/
+
+                                         guns <sung@metablu.com>
+
+ * Version:  1.0
+ * License:  MIT
+ * Homepage: http://github.com/guns/xterm-color-table.vim
+
+NOTES:
+
+ * Provides command :XtermColorTable
+ * Xterm numbers on the left, equivalent RGB values embedded on the right
+ * Press <C-l> in buffer to reload highlighting rules
+
+SCREENSHOTS:
+
+ * TODO: Screenshot goes here
+
+INSPIRED BY:
+
+ * http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html
+ * http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
