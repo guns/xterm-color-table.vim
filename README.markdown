@@ -9,7 +9,7 @@
 
  * Version:  1.0
  * License:  MIT
- * Homepage: http://github.com/guns/xterm-color-table.vim
+ * Homepage: <http://github.com/guns/xterm-color-table.vim>
 
 NOTES:
 
@@ -23,5 +23,5 @@ SCREENSHOTS:
 
 INSPIRED BY:
 
- * http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html
- * http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
+ * <http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html>
+ * <http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim>
