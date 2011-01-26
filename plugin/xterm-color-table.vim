@@ -23,8 +23,11 @@
 
 command! XtermColorTable call <SID>XtermColorTable(1)
 
-autocmd BufNewFile __XtermColorTable__ call <SID>ColorTable()
-autocmd Colorscheme * call <SID>XtermColorTable(0)
+augroup XtermColorTable "{{{
+    autocmd!
+    autocmd BufNewFile __XtermColorTable__ call <SID>ColorTable()
+    autocmd Colorscheme * call <SID>XtermColorTable(0)
+augroup END "}}}
 
 function! <SID>ColorCell(n) "{{{
     let rgb = s:xterm_colors[a:n]
