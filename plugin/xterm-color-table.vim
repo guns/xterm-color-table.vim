@@ -14,13 +14,16 @@
 " NOTES:
 "   * Provides command :XtermColorTable
 "   * Xterm numbers on the left, equivalent RGB values embedded on the right
-"   * Press <C-l> in buffer to reload highlighting rules
+"   * Buffer behavior similar to Scratch.vim
 "
 " INSPIRED BY:
 "   * http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html
 "   * http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
+"   * http://www.vim.org/scripts/script.php?script_id=664
 
-command! XtermColorTable new | call <SID>XtermColorTable(1)
+command! XtermColorTable call <SID>XtermColorTable()
+
+autocmd BufNewFile __XtermColorTable__ call <SID>ColorTable(1)
 
 function! <SID>ColorCell(n) "{{{
     let rgb = s:xterm_colors[a:n]
@@ -39,7 +42,7 @@ function! <SID>ColorRow(start, end) "{{{
     return join(map(range(a:start, a:end), '<SID>ColorCell(v:val)'))
 endfunction "}}}
 
-function! <SID>XtermColorTable(write) "{{{
+function! <SID>ColorTable(write) "{{{
     highlight clear | syntax clear
 
     let rows = []
@@ -57,10 +60,32 @@ function! <SID>XtermColorTable(write) "{{{
 
     if a:write
         call append(0, rows)
-        map <buffer> <C-l> :call <SID>XtermColorTable(0)<CR>
+        call <SID>SetBufferOptions()
     endif
+endfunction "}}}
 
-    setlocal nocursorline nocursorcolumn nomodified nomodifiable readonly iskeyword+=#
+function! <SID>SetBufferOptions() "{{{
+    setlocal buftype=nofile bufhidden=hide buflisted
+    setlocal nomodified nomodifiable noswapfile readonly
+    setlocal nocursorline nocursorcolumn
+    setlocal iskeyword+=#
+endfunction "}}}
+
+function! <SID>XtermColorTable() "{{{
+    let bufname = '__XtermColorTable__'
+    let bufid   = bufnr(bufname)
+    let winid   = bufwinnr(bufid)
+
+    if bufid == -1
+        " Create new buffer
+        execute 'new '.bufname
+    elseif winid != -1
+        " Switch to extant window
+        execute winid.'wincmd w'
+    else
+        " Reopen extant buffer
+        execute 'split +buffer'.bufid
+    endif
 endfunction "}}}
 
 
