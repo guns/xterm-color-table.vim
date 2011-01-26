@@ -21,9 +21,10 @@
 "   * http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
 "   * http://www.vim.org/scripts/script.php?script_id=664
 
-command! XtermColorTable call <SID>XtermColorTable()
+command! XtermColorTable call <SID>XtermColorTable(1)
 
 autocmd BufNewFile __XtermColorTable__ call <SID>ColorTable()
+autocmd Colorscheme * call <SID>XtermColorTable(0)
 
 function! <SID>ColorCell(n) "{{{
     let rgb = s:xterm_colors[a:n]
@@ -71,20 +72,27 @@ function! <SID>SetBufferOptions() "{{{
     setlocal iskeyword+=#
 endfunction "}}}
 
-function! <SID>XtermColorTable() "{{{
+function! <SID>XtermColorTable(open) "{{{
     let bufname = '__XtermColorTable__'
     let bufid   = bufnr(bufname)
     let winid   = bufwinnr(bufid)
 
-    if bufid == -1
-        " Create new buffer
-        execute 'new '.bufname
-    elseif winid != -1
-        " Switch to extant window
-        execute winid.'wincmd w'
+    if a:open
+        if bufid == -1
+            " Create new buffer
+            execute 'new '.bufname
+        elseif winid != -1
+            " Switch to extant window
+            execute winid.'wincmd w'
+        else
+            " Reopen extant buffer
+            execute 'split +buffer'.bufid
+        endif
     else
-        " Reopen extant buffer
-        execute 'split +buffer'.bufid
+        if bufid != -1
+            " Destroy extant buffer
+            silent execute bufid.'bwipeout'
+        endif
     endif
 endfunction "}}}
 
