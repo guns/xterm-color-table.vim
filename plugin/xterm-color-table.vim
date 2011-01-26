@@ -23,7 +23,7 @@
 
 command! XtermColorTable call <SID>XtermColorTable()
 
-autocmd BufNewFile __XtermColorTable__ call <SID>ColorTable(1)
+autocmd BufNewFile __XtermColorTable__ call <SID>ColorTable()
 
 function! <SID>ColorCell(n) "{{{
     let rgb = s:xterm_colors[a:n]
@@ -42,7 +42,7 @@ function! <SID>ColorRow(start, end) "{{{
     return join(map(range(a:start, a:end), '<SID>ColorCell(v:val)'))
 endfunction "}}}
 
-function! <SID>ColorTable(write) "{{{
+function! <SID>ColorTable() "{{{
     highlight clear | syntax clear
 
     let rows = []
@@ -58,10 +58,8 @@ function! <SID>ColorTable(write) "{{{
         endif
     endfor
 
-    if a:write
-        call append(0, rows)
-        call <SID>SetBufferOptions()
-    endif
+    call append(0, rows)
+    call <SID>SetBufferOptions()
 endfunction "}}}
 
 function! <SID>SetBufferOptions() "{{{
