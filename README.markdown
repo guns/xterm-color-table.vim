@@ -14,7 +14,7 @@ NOTES:
 
  * Provides command :XtermColorTable
  * Xterm numbers on the left, equivalent RGB values embedded on the right
- * Press <C-l> in buffer to reload highlighting rules
+ * Buffer behavior similar to Scratch.vim
 
 SCREENSHOTS:
 
@@ -24,3 +24,4 @@ INSPIRED BY:
 
  * <http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html>
  * <http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim>
+ * <http://www.vim.org/scripts/script.php?script_id=664>
