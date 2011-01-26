@@ -65,6 +65,11 @@ function! <SID>ColorTable(write) "{{{
 endfunction "}}}
 
 function! <SID>SetBufferOptions() "{{{
+    if exists('b:XtermColorTableOptions')
+        return
+    endif
+    let b:XtermColorTableOptions = 1
+
     setlocal buftype=nofile bufhidden=hide buflisted
     setlocal nomodified nomodifiable noswapfile readonly
     setlocal nocursorline nocursorcolumn
