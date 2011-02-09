@@ -31,23 +31,28 @@ augroup XtermColorTable "{{{
     autocmd Colorscheme * call <SID>XtermColorTable(0)
 augroup END "}}}
 
-function! <SID>HighlightCell(n, ...) "{{{
+function! <SID>HighlightCell(n, bfg) "{{{
     let rgb = s:xterm_colors[a:n]
 
     " Clear any extant values
     execute 'highlight fg_'.a:n.' ctermfg=none ctermbg=none guifg=none guibg=none'
     execute 'highlight bg_'.a:n.' ctermfg=none ctermbg=none guifg=none guibg=none'
 
-    if a:0
-        let bfg = a:1
-    else
-        " Assess relative intensity of color
+    " bfg has three states:
+    "   * same as background
+    "   * given value
+    "   * black or white depending on intensity
+    if a:bfg == -2
         let sum = 0
         for val in map(split(substitute(rgb, '^#', '', ''), '\v\x{2}\zs'), 'str2nr(v:val, 16)')
             " TODO: does Vimscript have a fold/reduce function?
             let sum += val
         endfor
         let bfg = sum > (0xff * 1.5) ? 0 : 15
+    elseif a:bfg == -1
+        let bfg = a:n
+    else
+        let bfg = a:bfg
     endif
 
     execute 'highlight fg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
@@ -61,7 +66,7 @@ function! <SID>ColorCell(n) "{{{
     execute 'syntax match fg_'.a:n.' " '.a:n.' " containedin=ALL'
     execute 'syntax match bg_'.a:n.' "'. rgb .'" containedin=ALL'
 
-    call <SID>HighlightCell(a:n)
+    call <SID>HighlightCell(a:n, -1)
 
     return printf('%5s%7s', ' '.a:n.' ', rgb)
 endfunction "}}}
@@ -97,6 +102,21 @@ function! <SID>SetBufferOptions() "{{{
     setlocal nomodified nomodifiable noswapfile readonly
     setlocal nocursorline nocursorcolumn
     setlocal iskeyword+=#
+
+    let b:RgbVisible = 0
+
+    map t :call <SID>ToggleRgbVisibility()<CR>
+endfunction "}}}
+
+function! <SID>ToggleRgbVisibility() "{{{
+    if b:RgbVisible
+        let bfg = -1
+    else
+        let bfg = -2
+    endif
+    let b:RgbVisible = (b:RgbVisible + 1) % 2
+
+    for val in range(0, 0xff) | call <SID>HighlightCell(val, bfg) | endfor
 endfunction "}}}
 
 function! <SID>XtermColorTable(open) "{{{
