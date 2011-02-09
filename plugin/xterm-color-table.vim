@@ -105,7 +105,7 @@ function! <SID>SetBufferOptions() "{{{
 
     let b:RgbVisible = 0
 
-    map t :call <SID>ToggleRgbVisibility()<CR>
+    map <buffer> t :call <SID>ToggleRgbVisibility()<CR>
 endfunction "}}}
 
 function! <SID>ToggleRgbVisibility() "{{{
