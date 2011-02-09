@@ -39,9 +39,9 @@ function! <SID>HighlightCell(n, bfg) "{{{
     execute 'highlight bg_'.a:n.' ctermfg=none ctermbg=none guifg=none guibg=none'
 
     " bfg has three states:
+    "   * black or white depending on intensity
     "   * same as background
     "   * given value
-    "   * black or white depending on intensity
     if a:bfg == -2
         let sum = 0
         for val in map(split(substitute(rgb, '^#', '', ''), '\v\x{2}\zs'), 'str2nr(v:val, 16)')
@@ -58,6 +58,10 @@ function! <SID>HighlightCell(n, bfg) "{{{
     execute 'highlight fg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
     execute 'highlight bg_'.a:n.' ctermbg='.a:n.' guibg='.rgb
     execute 'highlight bg_'.a:n.' ctermfg='.bfg.' guifg='.s:xterm_colors[bfg]
+endfunction "}}}
+
+function! <SID>HighlightTable(bfg) "{{{
+    for val in range(0, 0xff) | call <SID>HighlightCell(val, a:bfg) | endfor
 endfunction "}}}
 
 function! <SID>ColorCell(n) "{{{
@@ -104,19 +108,36 @@ function! <SID>SetBufferOptions() "{{{
     setlocal iskeyword+=#
 
     let b:RgbVisible = 0
+    let b:bfg = -2
 
-    map <buffer> t :call <SID>ToggleRgbVisibility()<CR>
+    map <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
+    map <silent><buffer> f :call <SID>SetRgbForeground(expand('<cword>'))<CR>
 endfunction "}}}
 
-function! <SID>ToggleRgbVisibility() "{{{
+function! <SID>ToggleRgbVisibility(...) "{{{
     if b:RgbVisible
         let bfg = -1
     else
-        let bfg = -2
+        let bfg = b:bfg
     endif
     let b:RgbVisible = (b:RgbVisible + 1) % 2
 
-    for val in range(0, 0xff) | call <SID>HighlightCell(val, bfg) | endfor
+    call <SID>HighlightTable(bfg)
+endfunction "}}}
+
+function! <SID>SetRgbForeground(cword) "{{{
+    if len(a:cword)
+        let sname = synIDattr(synID(line('.'), col('.'), 0), 'name')
+        let b:bfg = substitute(sname, '\v^\w+_', '', '') + 0
+    else
+        let b:bfg = -2
+    endif
+
+    if b:RgbVisible
+        call <SID>HighlightTable(b:bfg)
+    else
+        call <SID>ToggleRgbVisibility()
+    endif
 endfunction "}}}
 
 function! <SID>XtermColorTable(open) "{{{
