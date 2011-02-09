@@ -7,7 +7,7 @@
 "
 "                                       guns <sung@metablu.com>
 
-" Version:  1.3
+" Version:  1.4
 " License:  MIT
 " Homepage: http://github.com/guns/xterm-color-table.vim
 "
@@ -37,8 +37,8 @@ function! <SID>HighlightCell(n, bfg) "{{{
     let rgb = s:xterm_colors[a:n]
 
     " Clear any extant values
-    execute 'highlight fg_'.a:n.' ctermfg=none ctermbg=none guifg=none guibg=none'
-    execute 'highlight bg_'.a:n.' ctermfg=none ctermbg=none guifg=none guibg=none'
+    execute 'highlight fg_'.a:n.' ctermfg=NONE ctermbg=NONE guifg=NONE guibg=NONE'
+    execute 'highlight bg_'.a:n.' ctermfg=NONE ctermbg=NONE guifg=NONE guibg=NONE'
 
     " bfg has three states:
     "   * black or white depending on intensity
@@ -221,6 +221,6 @@ let s:xterm_colors = {
     \ '240': '#585858', '241': '#606060', '242': '#666666', '243': '#767676', '244': '#808080',
     \ '245': '#8a8a8a', '246': '#949494', '247': '#9e9e9e', '248': '#a8a8a8', '249': '#b2b2b2',
     \ '250': '#bcbcbc', '251': '#c6c6c6', '252': '#d0d0d0', '253': '#dadada', '254': '#e4e4e4',
-    \ '255': '#eeeeee', 'fg': 'fg', 'bg': 'bg', 'none': 'none' }
+    \ '255': '#eeeeee', 'fg': 'fg', 'bg': 'bg', 'NONE': 'NONE' }
 
 "}}}
