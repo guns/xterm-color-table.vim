@@ -31,15 +31,37 @@ augroup XtermColorTable "{{{
     autocmd Colorscheme * call <SID>XtermColorTable(0)
 augroup END "}}}
 
+function! <SID>HighlightCell(n, ...) "{{{
+    let rgb = s:xterm_colors[a:n]
+
+    " Clear any extant values
+    execute 'highlight fg_'.a:n.' ctermfg=none ctermbg=none guifg=none guibg=none'
+    execute 'highlight bg_'.a:n.' ctermfg=none ctermbg=none guifg=none guibg=none'
+
+    if a:0
+        let bfg = a:1
+    else
+        " Assess relative intensity of color
+        let sum = 0
+        for val in map(split(substitute(rgb, '^#', '', ''), '\v\x{2}\zs'), 'str2nr(v:val, 16)')
+            " TODO: does Vimscript have a fold/reduce function?
+            let sum += val
+        endfor
+        let bfg = sum > (0xff * 1.5) ? 0 : 15
+    endif
+
+    execute 'highlight fg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
+    execute 'highlight bg_'.a:n.' ctermbg='.a:n.' guibg='.rgb
+    execute 'highlight bg_'.a:n.' ctermfg='.bfg.' guifg='.s:xterm_colors[bfg]
+endfunction "}}}
+
 function! <SID>ColorCell(n) "{{{
     let rgb = s:xterm_colors[a:n]
 
     execute 'syntax match fg_'.a:n.' " '.a:n.' " containedin=ALL'
     execute 'syntax match bg_'.a:n.' "'. rgb .'" containedin=ALL'
 
-    execute 'highlight    fg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
-    execute 'highlight    bg_'.a:n.' ctermbg='.a:n.' guibg='.rgb
-    execute 'highlight    bg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
+    call <SID>HighlightCell(a:n)
 
     return printf('%5s%7s', ' '.a:n.' ', rgb)
 endfunction "}}}
