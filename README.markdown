@@ -21,6 +21,9 @@ NOTES:
 SCREENSHOTS:
 
 ![xterm-color-table](http://guns.github.com/xterm-color-table.vim/images/xterm-color-table.png)
+
+With RGB visibility toggled:
+
 ![xterm-color-table-with-visible-rgb](http://guns.github.com/xterm-color-table.vim/images/xterm-color-table-with-visible-rgb.png)
 
 INSPIRED BY:
