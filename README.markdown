@@ -14,11 +14,14 @@ NOTES:
 
  * Provides command :XtermColorTable
  * Xterm numbers on the left, equivalent RGB values embedded on the right
+ * Press `t` to toggle visible RGB values
+ * Press `f` while on a color to set visible RGB text color
  * Buffer behavior similar to Scratch.vim
 
 SCREENSHOTS:
 
 ![xterm-color-table](http://guns.github.com/xterm-color-table.vim/images/xterm-color-table.png)
+![xterm-color-table-with-visible-rgb](http://guns.github.com/xterm-color-table.vim/images/xterm-color-table-with-visible-rgb.png)
 
 INSPIRED BY:
 
