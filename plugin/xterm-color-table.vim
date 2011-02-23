@@ -116,7 +116,7 @@ function! <SID>SetBufferOptions() "{{{
     map <silent><buffer> f :call <SID>SetRgbForeground(expand('<cword>'))<CR>
 endfunction "}}}
 
-function! <SID>ToggleRgbVisibility(...) "{{{
+function! <SID>ToggleRgbVisibility() "{{{
     if b:RgbVisible
         let bfg = -1
     else
