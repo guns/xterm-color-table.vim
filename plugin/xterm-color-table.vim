@@ -74,7 +74,7 @@ function! <SID>ColorCell(n) "{{{
 
     call <SID>HighlightCell(a:n, -1)
 
-    return printf('%5s%7s', ' '.a:n.' ', rgb)
+    return printf(' %3s %7s', a:n, rgb)
 endfunction "}}}
 
 function! <SID>ColorRow(start, end) "{{{
