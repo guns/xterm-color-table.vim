@@ -25,13 +25,39 @@
 "   * http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
 "   * http://www.vim.org/scripts/script.php?script_id=664
 
-command! XtermColorTable call <SID>XtermColorTable(1)
+let s:bufname = '__XtermColorTable__'
+
+if !exists('g:XtermColorTableDefaultSplit')
+    let g:XtermColorTableDefaultSplit = 'split'
+endif
+
+command! XtermColorTable  execute 'call <SID>XtermColorTable(g:XtermColorTableDefaultSplit)'
+command! SXtermColorTable call <SID>XtermColorTable('split')
+command! VXtermColorTable call <SID>XtermColorTable('vsplit')
+command! TXtermColorTable call <SID>XtermColorTable('tabnew')
+command! EXtermColorTable call <SID>XtermColorTable('edit')
+command! OXtermColorTable call <SID>XtermColorTable('edit')
 
 augroup XtermColorTable "{{{
     autocmd!
     autocmd BufNewFile __XtermColorTable__ call <SID>ColorTable()
-    autocmd Colorscheme * call <SID>XtermColorTable(0)
 augroup END "}}}
+
+function! <SID>XtermColorTable(split) "{{{
+    let bufid = bufnr(s:bufname)
+    let winid = bufwinnr(bufid)
+
+    if bufid == -1
+        " Create new buffer
+        execute a:split.' '.s:bufname
+    elseif winid != -1
+        " Switch to extant window
+        execute winid.'wincmd w'
+    else
+        " Reopen extant buffer
+        execute a:split.' +buffer'.bufid
+    endif
+endfunction "}}}
 
 function! <SID>HighlightCell(n, bfg) "{{{
     let rgb = s:xterm_colors[a:n]
@@ -139,30 +165,6 @@ function! <SID>SetRgbForeground(cword) "{{{
         call <SID>HighlightTable(b:bfg)
     else
         call <SID>ToggleRgbVisibility()
-    endif
-endfunction "}}}
-
-function! <SID>XtermColorTable(open) "{{{
-    let bufname = '__XtermColorTable__'
-    let bufid   = bufnr(bufname)
-    let winid   = bufwinnr(bufid)
-
-    if a:open
-        if bufid == -1
-            " Create new buffer
-            execute 'new '.bufname
-        elseif winid != -1
-            " Switch to extant window
-            execute winid.'wincmd w'
-        else
-            " Reopen extant buffer
-            execute 'split +buffer'.bufid
-        endif
-    else
-        if bufid != -1
-            " Destroy extant buffer
-            silent execute bufid.'bwipeout'
-        endif
     endif
 endfunction "}}}
 
