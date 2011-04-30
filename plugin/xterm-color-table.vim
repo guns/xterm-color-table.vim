@@ -63,8 +63,8 @@ function! <SID>HighlightCell(n, bfg) "{{{
     let rgb = s:xterm_colors[a:n]
 
     " Clear any extant values
-    execute 'highlight fg_'.a:n.' ctermfg=NONE ctermbg=NONE guifg=NONE guibg=NONE'
-    execute 'highlight bg_'.a:n.' ctermfg=NONE ctermbg=NONE guifg=NONE guibg=NONE'
+    execute 'highlight clear fg_'.a:n
+    execute 'highlight clear bg_'.a:n
 
     " bfg has three states:
     "   * black or white depending on intensity
