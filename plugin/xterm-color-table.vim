@@ -27,11 +27,12 @@
 "   * http://www.vim.org/scripts/script.php?script_id=664
 
 
-" We have a dependency on buffer-local autocommands
+" We have a dependency on buffer-local autocommands "{{{
 if version < 700
     echo 'FAIL: XtermColorTable requires vim 7.0+'
     finish
 endif
+
 
 let s:bufname = '__XtermColorTable__'
 
@@ -45,7 +46,7 @@ command! SXtermColorTable call <SID>XtermColorTable('split')
 command! VXtermColorTable call <SID>XtermColorTable('vsplit')
 command! TXtermColorTable call <SID>XtermColorTable('tabnew')
 command! EXtermColorTable call <SID>XtermColorTable('edit')
-command! OXtermColorTable call <SID>XtermColorTable('edit') | only
+command! OXtermColorTable call <SID>XtermColorTable('edit') | only "}}}
 
 
 augroup XtermColorTable "{{{
@@ -221,6 +222,7 @@ function! <SID>ClearTable() "{{{
         execute 'silent! syntax clear bg_'.n
     endfor
 endfunction "}}}
+
 
 """ Xterm 256 color dictionary {{{
 
