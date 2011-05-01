@@ -26,6 +26,12 @@
 "   * http://www.vim.org/scripts/script.php?script_id=664
 
 
+" We have a dependency on buffer-local autocmds
+if version < 700
+    echo 'FAIL: XtermColorTable requires vim 7.0+'
+    finish
+endif
+
 let s:bufname = '__XtermColorTable__'
 
 if !exists('g:XtermColorTableDefaultSplit')
