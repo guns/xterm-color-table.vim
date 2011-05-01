@@ -92,6 +92,7 @@ function! <SID>ColorTable() "{{{
         call append(0, rows)
         call append(len(rows) + 1, <SID>HelpComment())
         call <SID>SetBufferOptions()
+        call <SID>SetWindowOptions()
     endif
 endfunction "}}}
 
@@ -150,7 +151,6 @@ endfunction "}}}
 function! <SID>SetBufferOptions() "{{{
     setlocal buftype=nofile bufhidden=hide buflisted
     setlocal nomodified nomodifiable noswapfile readonly
-    setlocal nocursorline nocursorcolumn
     setlocal iskeyword+=#
 
     let b:XtermColorTableRgbVisible = 0
@@ -167,6 +167,11 @@ function! <SID>SetBufferOptions() "{{{
         autocmd ColorScheme <buffer> call <SID>HighlightTable(-1)
         autocmd BufDelete   <buffer> call <SID>ClearTable()
     augroup END
+endfunction "}}}
+
+
+function! <SID>SetWindowOptions() "{{{
+    setlocal nocursorline nocursorcolumn
 endfunction "}}}
 
 
