@@ -7,7 +7,7 @@
 "
 "                                           guns <self@sungpae.com>
 
-" Version:  1.5
+" Version:  1.6
 " License:  MIT
 " Homepage: http://github.com/guns/xterm-color-table.vim
 "
