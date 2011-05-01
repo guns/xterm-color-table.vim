@@ -88,6 +88,7 @@ function! <SID>ColorTable() "{{{
 
     if &modifiable
         call append(0, rows)
+        call append(len(rows) + 1, <SID>HelpComment())
         call <SID>SetBufferOptions()
     endif
 endfunction "}}}
@@ -162,6 +163,20 @@ function! <SID>SetBufferOptions() "{{{
         autocmd! * <buffer>
         autocmd ColorScheme <buffer> call <SID>HighlightTable(b:XtermColorTableBGF)
     augroup END
+endfunction "}}}
+
+
+function! <SID>HelpComment() "{{{
+    " we have to define our own comment type
+    silent! syntax clear XtermColorTableComment
+    syntax match XtermColorTableComment ';.*'
+    highlight link XtermColorTableComment Comment
+
+    let lines = []
+    call add(lines, "; t to toggle RGB visibility")
+    call add(lines, "; f to set RGB foreground color")
+
+    return lines
 endfunction "}}}
 
 
