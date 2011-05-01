@@ -3,8 +3,9 @@ task :default => :tarball
 desc 'Create a release tarball'
 task :tarball do
   File.open 'xterm-color-table.vim.tar.gz', 'w' do |f|
+    dir = File.basename Dir.pwd
     Dir.chdir '..' do
-      files = %w[README.markdown plugin doc].map { |f| 'xterm-color-table.vim/' + f }
+      files = %w[README.markdown plugin doc].map { |f| File.join dir, f }
       f.write %x(tar zcv #{files.join ' '})
     end
   end
