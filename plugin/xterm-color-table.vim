@@ -26,7 +26,7 @@
 "   * http://www.vim.org/scripts/script.php?script_id=664
 
 
-" We have a dependency on buffer-local autocmds
+" We have a dependency on buffer-local autocommands
 if version < 700
     echo 'FAIL: XtermColorTable requires vim 7.0+'
     finish
@@ -38,6 +38,7 @@ if !exists('g:XtermColorTableDefaultSplit')
     let g:XtermColorTableDefaultSplit = 'split'
 endif
 
+
 command! XtermColorTable  execute 'call <SID>XtermColorTable(g:XtermColorTableDefaultSplit)'
 command! SXtermColorTable call <SID>XtermColorTable('split')
 command! VXtermColorTable call <SID>XtermColorTable('vsplit')
@@ -45,11 +46,13 @@ command! TXtermColorTable call <SID>XtermColorTable('tabnew')
 command! EXtermColorTable call <SID>XtermColorTable('edit')
 command! OXtermColorTable call <SID>XtermColorTable('edit') | only
 
+
 augroup XtermColorTable "{{{
     autocmd!
     autocmd BufNewFile  __XtermColorTable__ call <SID>ColorTable()
     autocmd ColorScheme *                   doautoall XtermColorTableBuffer ColorScheme
 augroup END "}}}
+
 
 function! <SID>XtermColorTable(split) "{{{
     let bufid = bufnr(s:bufname)
@@ -66,6 +69,7 @@ function! <SID>XtermColorTable(split) "{{{
         execute a:split.' +buffer'.bufid
     endif
 endfunction "}}}
+
 
 function! <SID>ColorTable() "{{{
     let rows = []
@@ -87,9 +91,11 @@ function! <SID>ColorTable() "{{{
     endif
 endfunction "}}}
 
+
 function! <SID>ColorRow(start, end) "{{{
     return join(map(range(a:start, a:end), '<SID>ColorCell(v:val)'))
 endfunction "}}}
+
 
 function! <SID>ColorCell(n) "{{{
     let rgb = s:xterm_colors[a:n]
@@ -105,6 +111,7 @@ function! <SID>ColorCell(n) "{{{
 
     return printf(' %3s %7s', a:n, rgb)
 endfunction "}}}
+
 
 function! <SID>HighlightCell(n, bgf) "{{{
     let rgb = s:xterm_colors[a:n]
@@ -135,6 +142,7 @@ function! <SID>HighlightCell(n, bgf) "{{{
     execute 'highlight bg_'.a:n.' ctermfg='.bgf.' guifg='.s:xterm_colors[bgf]
 endfunction "}}}
 
+
 function! <SID>SetBufferOptions() "{{{
     setlocal buftype=nofile bufhidden=hide buflisted
     setlocal nomodified nomodifiable noswapfile readonly
@@ -155,6 +163,7 @@ function! <SID>SetBufferOptions() "{{{
     augroup END
 endfunction "}}}
 
+
 function! <SID>ToggleRgbVisibility() "{{{
     let bgf = b:XtermColorTableRgbVisible ? -1 : b:XtermColorTableBGF
     let b:XtermColorTableRgbVisible = (b:XtermColorTableRgbVisible + 1) % 2
@@ -162,9 +171,11 @@ function! <SID>ToggleRgbVisibility() "{{{
     call <SID>HighlightTable(bgf)
 endfunction "}}}
 
+
 function! <SID>HighlightTable(bgf) "{{{
     for val in range(0, 0xff) | call <SID>HighlightCell(val, a:bgf) | endfor
 endfunction "}}}
+
 
 function! <SID>SetRgbForeground(cword) "{{{
     if len(a:cword)
