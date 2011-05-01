@@ -165,7 +165,7 @@ function! <SID>SetBufferOptions() "{{{
     augroup XtermColorTableBuffer
         autocmd! * <buffer>
         autocmd ColorScheme <buffer> call <SID>HighlightTable(-1)
-        autocmd BufDelete   <buffer> call <SID>ClearTable()
+        autocmd BufUnload   <buffer> call <SID>ClearTable(expand('<abuf>'))
     augroup END
 endfunction "}}}
 
@@ -198,11 +198,6 @@ function! <SID>ToggleRgbVisibility() "{{{
 endfunction "}}}
 
 
-function! <SID>HighlightTable(bgf) "{{{
-    for val in range(0, 0xff) | call <SID>HighlightCell(val, a:bgf) | endfor
-endfunction "}}}
-
-
 function! <SID>SetRgbForeground(cword) "{{{
     if len(a:cword)
         let sname = synIDattr(synID(line('.'), col('.'), 0), 'name')
@@ -219,13 +214,25 @@ function! <SID>SetRgbForeground(cword) "{{{
 endfunction "}}}
 
 
-function! <SID>ClearTable() "{{{
-    for n in range(0, 0xff)
-        execute 'silent! highlight clear fg_'.n
-        execute 'silent! highlight clear bg_'.n
-        execute 'silent! syntax clear fg_'.n
-        execute 'silent! syntax clear bg_'.n
-    endfor
+function! <SID>HighlightTable(bgf) "{{{
+    for n in range(0, 0xff) | call <SID>HighlightCell(n, a:bgf) | endfor
+endfunction "}}}
+
+
+function! <SID>ClearTable(abuf) "{{{
+    if !len(<SID>TableList(a:abuf))
+        for n in range(0, 0xff)
+            execute 'silent! highlight clear fg_'.n
+            execute 'silent! highlight clear bg_'.n
+            execute 'silent! syntax clear fg_'.n
+            execute 'silent! syntax clear bg_'.n
+        endfor
+    endif
+endfunction "}}}
+
+
+function! <SID>TableList(bufnr) "{{{
+    return filter(range(1, bufnr('$')), '(bufname(v:val) == s:bufname) && (v:val != a:bufnr)')
 endfunction "}}}
 
 
