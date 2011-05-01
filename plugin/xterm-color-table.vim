@@ -51,7 +51,7 @@ command! OXtermColorTable call <SID>XtermColorTable('edit') | only
 augroup XtermColorTable "{{{
     autocmd!
     autocmd BufNewFile  __XtermColorTable__ call <SID>ColorTable()
-    autocmd ColorScheme *                   doautoall XtermColorTableBuffer ColorScheme
+    autocmd ColorScheme *                   silent! doautoall XtermColorTableBuffer ColorScheme
 augroup END "}}}
 
 
