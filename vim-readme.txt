@@ -5,10 +5,11 @@ http://github.com/guns/xterm-color-table.vim
 
 NOTES
 
- * Provides command :XtermColorTable
- * Xterm numbers on the left, equivalent RGB values embedded on the right
+ * Provides command :XtermColorTable, as well as variants for different splits
+ * Xterm numbers on the left, equivalent RGB values on the right
+ * Press `#` to yank current color (shortcut for yiw)
  * Press `t` to toggle RGB text visibility
- * Press `f` while on a color to set the RGB text to that color
+ * Press `f` to set RGB text to current color
  * Buffer behavior similar to Scratch.vim
 
 

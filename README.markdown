@@ -1,21 +1,22 @@
 
-     __   __)              )   ___                  ______)
-    (,  |/                (__/_____)    /)         (, /       /)  /)
-        |  _/_  _  __ ___   /       ___// _____      /   _   (/_ //  _
-     ) /|_ (___(/_/ (_// (_/       (_)(/_(_)/ (_  ) /   (_(_/_) (/__(/_
-    (_/                   (______)               (_/
+     ___  __)                   )   ___                  ______)
+    (,  |/                     (__/_____)   /)          (, /      /)  /)
+        |  _/_  _  __  ____      /      ___// _____       /  _   (/_ //  _
+     ) /|_ (___(/_/ (_/ / /_  (_/      (_)(/_(_)/ (_   ) /  (_(_/_) (/__(/_
+    (_/                        (______)               (_/
 
-                                         guns <sung@metablu.com>
+                                             guns <self@sungpae.com>
 
  * License:  MIT
  * Homepage: <http://github.com/guns/xterm-color-table.vim>
 
 NOTES:
 
- * Provides command :XtermColorTable
- * Xterm numbers on the left, equivalent RGB values embedded on the right
+ * Provides command :XtermColorTable, as well as variants for different splits
+ * Xterm numbers on the left, equivalent RGB values on the right
+ * Press `#` to yank current color (shortcut for yiw)
  * Press `t` to toggle RGB text visibility
- * Press `f` while on a color to set the RGB text to that color
+ * Press `f` to set RGB text to current color
  * Buffer behavior similar to Scratch.vim
 
 SCREENSHOTS:
