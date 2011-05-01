@@ -1,6 +1,5 @@
 All 256 xterm colors with their RGB equivalents!	*XtermColorTable*
 
-
      ___  __)                   )   ___                  ______)
     (,  |/                     (__/_____)   /)          (, /      /)  /)
         |  _/_  _  __  ____      /      ___// _____       /  _   (/_ //  _
@@ -9,15 +8,49 @@ All 256 xterm colors with their RGB equivalents!	*XtermColorTable*
 
                                              guns <self@sungpae.com>
 
+==============================================================================
+Commands
 
-To create a new buffer, or open an existing one:
+							*:XtermColorTable*
+:XtermColorTable	Create a new buffer, or open an existing buffer
+
+							*SXtermColorTable*
+:SXtermColorTable	Same, but (re)open in a split window
+
+							*VXtermColorTable*
+:VXtermColorTable	Same, but (re)open in a vertical split window
+
+							*TXtermColorTable*
+:TXtermColorTable	Same, but (re)open in a new tab
+
+							*EXtermColorTable*
+:EXtermColorTable	Same, but (re)open in current window
+
+							*OXtermColorTable*
+:OXtermColorTable	Same, but (re)open and make it the only window
+
+
+==============================================================================
+Options
+
+						*g:XtermColorTableDefaultOpen*
+
+The default window opening command used by |:XtermColorTable|
 >
-	:XtermColorTable
-<
-
-Press `t' to toggle RGB text visibility
-
-Press `f' while on a color to set the RGB text to that color
+	let g:XtermColorTableDefaultOpen = 'split'
 
 
- vim:tw=78:ts=8:sw=8:noet:ft=help:norl:
+==============================================================================
+Mappings					*XtermColorTable-mappings*
+
+
+While in the XtermColorTable buffer,
+
+- Press <t> to toggle RGB text visibility		*XtermColorTable-t*
+
+- Press <f> to set RGB text to current color		*XtermColorTable-f*
+
+- Press <#> to yank current color (shortcut for yiw)	*XtermColorTable-#*
+
+
+ vim:tw=78:sw=8:ts=8:sts=8:noet:ft=help:norl:
