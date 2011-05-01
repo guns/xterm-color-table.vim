@@ -51,8 +51,7 @@ command! OXtermColorTable call <SID>XtermColorTable('edit') | only "}}}
 
 augroup XtermColorTable "{{{
     autocmd!
-    autocmd BufNewFile  __XtermColorTable__ call <SID>ColorTable()
-    autocmd ColorScheme *                   silent! doautoall XtermColorTableBuffer ColorScheme
+    autocmd BufNewFile __XtermColorTable__ call <SID>ColorTable()
 augroup END "}}}
 
 
@@ -162,6 +161,10 @@ function! <SID>SetBufferOptions() "{{{
 
     " Colorschemes often call `highlight clear';
     " register a handler to deal with this
+    augroup XtermColorTable
+        autocmd ColorScheme * silent! doautoall XtermColorTableBuffer ColorScheme
+    augroup END
+
     augroup XtermColorTableBuffer
         autocmd! * <buffer>
         autocmd ColorScheme <buffer> call <SID>HighlightTable(-1)
@@ -221,12 +224,16 @@ endfunction "}}}
 
 function! <SID>ClearTable(abuf) "{{{
     if !len(<SID>TableList(a:abuf))
+        " remove global styles
         for n in range(0, 0xff)
             execute 'silent! highlight clear fg_'.n
             execute 'silent! highlight clear bg_'.n
             execute 'silent! syntax clear fg_'.n
             execute 'silent! syntax clear bg_'.n
         endfor
+
+        " remove unnecessary global handlers
+        autocmd! XtermColorTable ColorScheme
     endif
 endfunction "}}}
 
