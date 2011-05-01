@@ -61,13 +61,14 @@ function! <SID>XtermColorTable(split) "{{{
     if bufid == -1
         " Create new buffer
         execute a:split.' '.s:bufname
-    elseif winid > 0
-        " Switch to extant window
-        execute winid.'wincmd w'
-    else
-        " Reopen extant buffer
-        execute a:split.' +buffer'.bufid
+        return
+    elseif winid != -1 && winnr('$') > 1
+        " Close extant window
+        execute winid.'wincmd w' | close
     endif
+
+    " Open extant buffer
+    execute a:split.' +buffer'.bufid
 endfunction "}}}
 
 
