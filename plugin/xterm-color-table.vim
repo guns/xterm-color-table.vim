@@ -20,6 +20,10 @@
 "   * Press `f` to set RGB text to current color
 "   * Buffer behavior similar to Scratch.vim
 "
+" TODO:
+"
+"   * Configurable number of columns for main layout
+"
 " INSPIRED BY:
 "
 "   * http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html
@@ -148,9 +152,12 @@ endfunction "}}}
 
 
 function! <SID>SetBufferOptions() "{{{
-    setlocal buftype=nofile bufhidden=hide buflisted
-    setlocal nomodified nomodifiable noswapfile readonly
-    setlocal iskeyword+=#
+    setlocal buflisted          " should appear in buffer lists
+    setlocal buftype=nofile     " special non-file buffer, freezes bufname
+    setlocal iskeyword+=#       " for easy yanking of RGB hex values
+    setlocal nomodifiable       " do not allow editing
+    setlocal noswapfile         " don't need backups
+    setlocal textwidth=0        " don't hard wrap
 
     let b:XtermColorTableRgbVisible = 0
     let b:XtermColorTableBGF = -2
@@ -174,7 +181,13 @@ endfunction "}}}
 
 
 function! <SID>SetWindowOptions() "{{{
-    setlocal nocursorline nocursorcolumn
+    setlocal foldcolumn=0       " no folding
+    setlocal nocursorcolumn	" just in case
+    setlocal nocursorline	" distracting
+    setlocal nolist             " ugly
+    setlocal nonumber           " has xterm color numbers
+    setlocal nospell            " no words to spell
+    setlocal nowrap             " soft wrap looks ugly
 endfunction "}}}
 
 
