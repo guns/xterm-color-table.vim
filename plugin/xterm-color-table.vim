@@ -41,7 +41,8 @@ command! OXtermColorTable call <SID>XtermColorTable('edit') | only
 
 augroup XtermColorTable "{{{
     autocmd!
-    autocmd BufNewFile __XtermColorTable__ call <SID>ColorTable()
+    autocmd BufNewFile  __XtermColorTable__ call <SID>ColorTable()
+    autocmd ColorScheme *                   doautoall XtermColorTableBuffer ColorScheme
 augroup END "}}}
 
 function! <SID>XtermColorTable(split) "{{{
@@ -135,10 +136,17 @@ function! <SID>SetBufferOptions() "{{{
     setlocal iskeyword+=#
 
     let b:XtermColorTableRgbVisible = 0
-    let b:XtermColorTableBGF = -2
+    let b:XtermColorTableBGF = -1
 
     nmap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
     nmap <silent><buffer> f :call <SID>SetRgbForeground(expand('<cword>'))<CR>
+
+    " Colorschemes often call `highlight clear';
+    " register a handler to deal with this
+    augroup XtermColorTableBuffer
+        autocmd! * <buffer>
+        autocmd ColorScheme <buffer> call <SID>HighlightTable(b:XtermColorTableBGF)
+    augroup END
 endfunction "}}}
 
 function! <SID>ToggleRgbVisibility() "{{{
