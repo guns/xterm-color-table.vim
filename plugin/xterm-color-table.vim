@@ -37,7 +37,7 @@ command! SXtermColorTable call <SID>XtermColorTable('split')
 command! VXtermColorTable call <SID>XtermColorTable('vsplit')
 command! TXtermColorTable call <SID>XtermColorTable('tabnew')
 command! EXtermColorTable call <SID>XtermColorTable('edit')
-command! OXtermColorTable call <SID>XtermColorTable('edit')
+command! OXtermColorTable call <SID>XtermColorTable('edit') | only
 
 augroup XtermColorTable "{{{
     autocmd!
@@ -51,7 +51,7 @@ function! <SID>XtermColorTable(split) "{{{
     if bufid == -1
         " Create new buffer
         execute a:split.' '.s:bufname
-    elseif winid != -1
+    elseif winid > 0
         " Switch to extant window
         execute winid.'wincmd w'
     else
