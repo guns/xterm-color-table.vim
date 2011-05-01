@@ -164,6 +164,7 @@ function! <SID>SetBufferOptions() "{{{
     augroup XtermColorTableBuffer
         autocmd! * <buffer>
         autocmd ColorScheme <buffer> call <SID>HighlightTable(-1)
+        autocmd BufDelete   <buffer> call <SID>ClearTable()
     augroup END
 endfunction "}}}
 
@@ -211,6 +212,15 @@ function! <SID>SetRgbForeground(cword) "{{{
     endif
 endfunction "}}}
 
+
+function! <SID>ClearTable() "{{{
+    for n in range(0, 0xff)
+        execute 'silent! highlight clear fg_'.n
+        execute 'silent! highlight clear bg_'.n
+        execute 'silent! syntax clear fg_'.n
+        execute 'silent! syntax clear bg_'.n
+    endfor
+endfunction "}}}
 
 """ Xterm 256 color dictionary {{{
 
