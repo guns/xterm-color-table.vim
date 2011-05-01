@@ -155,7 +155,7 @@ function! <SID>SetBufferOptions() "{{{
     let b:XtermColorTableRgbVisible = 0
     let b:XtermColorTableBGF = -2
 
-    nmap <silent><buffer> # yiw
+    nmap <silent><buffer> # yiw:echo 'yanked: '.@"<CR>
     nmap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
     nmap <silent><buffer> f :call <SID>SetRgbForeground(expand('<cword>'))<CR>
 
