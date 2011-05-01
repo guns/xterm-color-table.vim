@@ -153,7 +153,7 @@ function! <SID>SetBufferOptions() "{{{
     setlocal iskeyword+=#
 
     let b:XtermColorTableRgbVisible = 0
-    let b:XtermColorTableBGF = -1
+    let b:XtermColorTableBGF = -2
 
     nmap <silent><buffer> # yiw
     nmap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
@@ -163,7 +163,7 @@ function! <SID>SetBufferOptions() "{{{
     " register a handler to deal with this
     augroup XtermColorTableBuffer
         autocmd! * <buffer>
-        autocmd ColorScheme <buffer> call <SID>HighlightTable(b:XtermColorTableBGF)
+        autocmd ColorScheme <buffer> call <SID>HighlightTable(-1)
     augroup END
 endfunction "}}}
 
