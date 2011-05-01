@@ -25,6 +25,7 @@
 "   * http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
 "   * http://www.vim.org/scripts/script.php?script_id=664
 
+
 let s:bufname = '__XtermColorTable__'
 
 if !exists('g:XtermColorTableDefaultSplit')
@@ -59,57 +60,7 @@ function! <SID>XtermColorTable(split) "{{{
     endif
 endfunction "}}}
 
-function! <SID>HighlightCell(n, bfg) "{{{
-    let rgb = s:xterm_colors[a:n]
-
-    " Clear any extant values
-    execute 'highlight clear fg_'.a:n
-    execute 'highlight clear bg_'.a:n
-
-    " bfg has three states:
-    "   * black or white depending on intensity
-    "   * same as background
-    "   * given value
-    if a:bfg == -2
-        let sum = 0
-        for val in map(split(substitute(rgb, '^#', '', ''), '\v\x{2}\zs'), 'str2nr(v:val, 16)')
-            " TODO: does Vimscript have a fold/reduce function?
-            let sum += val
-        endfor
-        let bfg = sum > (0xff * 1.5) ? 0 : 15
-    elseif a:bfg == -1
-        let bfg = a:n
-    else
-        let bfg = a:bfg
-    endif
-
-    execute 'highlight fg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
-    execute 'highlight bg_'.a:n.' ctermbg='.a:n.' guibg='.rgb
-    execute 'highlight bg_'.a:n.' ctermfg='.bfg.' guifg='.s:xterm_colors[bfg]
-endfunction "}}}
-
-function! <SID>HighlightTable(bfg) "{{{
-    for val in range(0, 0xff) | call <SID>HighlightCell(val, a:bfg) | endfor
-endfunction "}}}
-
-function! <SID>ColorCell(n) "{{{
-    let rgb = s:xterm_colors[a:n]
-
-    execute 'syntax match fg_'.a:n.' " '.a:n.' " containedin=ALL'
-    execute 'syntax match bg_'.a:n.' "'. rgb .'" containedin=ALL'
-
-    call <SID>HighlightCell(a:n, -1)
-
-    return printf(' %3s %7s', a:n, rgb)
-endfunction "}}}
-
-function! <SID>ColorRow(start, end) "{{{
-    return join(map(range(a:start, a:end), '<SID>ColorCell(v:val)'))
-endfunction "}}}
-
 function! <SID>ColorTable() "{{{
-    highlight clear | syntax clear
-
     let rows = []
 
     call add(rows, <SID>ColorRow(0,  7))
@@ -129,40 +80,88 @@ function! <SID>ColorTable() "{{{
     endif
 endfunction "}}}
 
+function! <SID>ColorRow(start, end) "{{{
+    return join(map(range(a:start, a:end), '<SID>ColorCell(v:val)'))
+endfunction "}}}
+
+function! <SID>ColorCell(n) "{{{
+    let rgb = s:xterm_colors[a:n]
+
+    " Clear extant values
+    execute 'syntax clear fg_'.a:n
+    execute 'syntax clear bg_'.a:n
+
+    execute 'syntax match fg_'.a:n.' " '.a:n.' " containedin=ALL'
+    execute 'syntax match bg_'.a:n.' "'. rgb .'" containedin=ALL'
+
+    call <SID>HighlightCell(a:n, -1)
+
+    return printf(' %3s %7s', a:n, rgb)
+endfunction "}}}
+
+function! <SID>HighlightCell(n, bgf) "{{{
+    let rgb = s:xterm_colors[a:n]
+
+    " bgf has three states:
+    "   -2) black or white depending on intensity
+    "   -1) same as background
+    "   0+) xterm color value
+    if a:bgf == -2
+        let sum = 0
+        for val in map(split(substitute(rgb, '^#', '', ''), '\v\x{2}\zs'), 'str2nr(v:val, 16)')
+            " TODO: does Vimscript have a fold/reduce function?
+            let sum += val
+        endfor
+        let bgf = sum > (0xff * 1.5) ? 0 : 15
+    elseif a:bgf == -1
+        let bgf = a:n
+    else
+        let bgf = a:bgf
+    endif
+
+    " Clear any extant values
+    execute 'highlight clear fg_'.a:n
+    execute 'highlight clear bg_'.a:n
+
+    execute 'highlight fg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
+    execute 'highlight bg_'.a:n.' ctermbg='.a:n.' guibg='.rgb
+    execute 'highlight bg_'.a:n.' ctermfg='.bgf.' guifg='.s:xterm_colors[bgf]
+endfunction "}}}
+
 function! <SID>SetBufferOptions() "{{{
     setlocal buftype=nofile bufhidden=hide buflisted
     setlocal nomodified nomodifiable noswapfile readonly
     setlocal nocursorline nocursorcolumn
     setlocal iskeyword+=#
 
-    let b:RgbVisible = 0
-    let b:bfg = -2
+    let b:XtermColorTableRgbVisible = 0
+    let b:XtermColorTableBGF = -2
 
     nmap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
     nmap <silent><buffer> f :call <SID>SetRgbForeground(expand('<cword>'))<CR>
 endfunction "}}}
 
 function! <SID>ToggleRgbVisibility() "{{{
-    if b:RgbVisible
-        let bfg = -1
-    else
-        let bfg = b:bfg
-    endif
-    let b:RgbVisible = (b:RgbVisible + 1) % 2
+    let bgf = b:XtermColorTableRgbVisible ? -1 : b:XtermColorTableBGF
+    let b:XtermColorTableRgbVisible = (b:XtermColorTableRgbVisible + 1) % 2
 
-    call <SID>HighlightTable(bfg)
+    call <SID>HighlightTable(bgf)
+endfunction "}}}
+
+function! <SID>HighlightTable(bgf) "{{{
+    for val in range(0, 0xff) | call <SID>HighlightCell(val, a:bgf) | endfor
 endfunction "}}}
 
 function! <SID>SetRgbForeground(cword) "{{{
     if len(a:cword)
         let sname = synIDattr(synID(line('.'), col('.'), 0), 'name')
-        let b:bfg = substitute(sname, '\v^\w+_', '', '') + 0
+        let b:XtermColorTableBGF = substitute(sname, '\v^\w+_', '', '') + 0
     else
-        let b:bfg = -2
+        let b:XtermColorTableBGF = -2
     endif
 
-    if b:RgbVisible
-        call <SID>HighlightTable(b:bfg)
+    if b:XtermColorTableRgbVisible
+        call <SID>HighlightTable(b:XtermColorTableBGF)
     else
         call <SID>ToggleRgbVisibility()
     endif
