@@ -88,8 +88,8 @@ function! <SID>ColorCell(n) "{{{
     let rgb = s:xterm_colors[a:n]
 
     " Clear extant values
-    execute 'syntax clear fg_'.a:n
-    execute 'syntax clear bg_'.a:n
+    execute 'silent! syntax clear fg_'.a:n
+    execute 'silent! syntax clear bg_'.a:n
 
     execute 'syntax match fg_'.a:n.' " '.a:n.' " containedin=ALL'
     execute 'syntax match bg_'.a:n.' "'. rgb .'" containedin=ALL'
@@ -120,8 +120,8 @@ function! <SID>HighlightCell(n, bgf) "{{{
     endif
 
     " Clear any extant values
-    execute 'highlight clear fg_'.a:n
-    execute 'highlight clear bg_'.a:n
+    execute 'silent! highlight clear fg_'.a:n
+    execute 'silent! highlight clear bg_'.a:n
 
     execute 'highlight fg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
     execute 'highlight bg_'.a:n.' ctermbg='.a:n.' guibg='.rgb
