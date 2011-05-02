@@ -49,8 +49,7 @@ command! XtermColorTable  execute 'call <SID>XtermColorTable(g:XtermColorTableDe
 command! SXtermColorTable call <SID>XtermColorTable('split')
 command! VXtermColorTable call <SID>XtermColorTable('vsplit')
 command! TXtermColorTable call <SID>XtermColorTable('tabnew')
-command! EXtermColorTable call <SID>XtermColorTable('edit')
-command! OXtermColorTable call <SID>XtermColorTable('edit') | only "}}}
+command! OXtermColorTable call <SID>XtermColorTable('edit') | silent! only "}}}
 
 
 augroup XtermColorTable "{{{

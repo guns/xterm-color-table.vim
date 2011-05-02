@@ -23,9 +23,6 @@ Commands
 							*TXtermColorTable*
 :TXtermColorTable	Same, but (re)open in a new tab
 
-							*EXtermColorTable*
-:EXtermColorTable	Same, but (re)open in current window
-
 							*OXtermColorTable*
 :OXtermColorTable	Same, but (re)open and make it the only window
 
