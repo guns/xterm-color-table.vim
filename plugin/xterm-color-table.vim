@@ -159,13 +159,13 @@ endfunction "}}}
 
 
 function! <SID>SetBufferOptions() "{{{
-    setlocal buflisted          " should appear in buffer lists
-    setlocal buftype=nofile     " special non-file buffer, freezes bufname
-    setlocal bufhidden=hide     " act like a normal buffer when window closes
-    setlocal iskeyword+=#       " for easy yanking of RGB hex values
-    setlocal nomodifiable       " do not allow editing
-    setlocal noswapfile         " don't need backups
-    setlocal textwidth=0        " don't hard wrap
+    setlocal buflisted          " Should appear in buffer lists
+    setlocal buftype=nofile     " Special non-file buffer, freezes bufname
+    setlocal bufhidden=hide     " Act like a normal buffer when window closes
+    setlocal iskeyword+=#       " For easy yanking of RGB hex values
+    setlocal nomodifiable       " Do not allow editing
+    setlocal noswapfile         " Don't need backups
+    setlocal textwidth=0        " Don't hard wrap
 
     let b:XtermColorTableRgbVisible = 0
     let b:XtermColorTableBGF = -2
@@ -189,13 +189,13 @@ endfunction "}}}
 
 
 function! <SID>SetWindowOptions() "{{{
-    setlocal foldcolumn=0       " no folding
-    setlocal nocursorcolumn	" just in case
-    setlocal nocursorline	" distracting
-    setlocal nolist             " ugly
-    setlocal nonumber           " has xterm color numbers
-    setlocal nospell            " no words to spell
-    setlocal nowrap             " soft wrap looks ugly
+    setlocal foldcolumn=0       " No folding
+    setlocal nocursorcolumn     " Just in case
+    setlocal nocursorline       " Distracting
+    setlocal nolist             " Ugly
+    setlocal nonumber           " Has xterm color numbers
+    setlocal nospell            " No words to spell
+    setlocal nowrap             " Soft wrap looks ugly
 endfunction "}}}
 
 
@@ -205,12 +205,12 @@ function! <SID>HelpComment() "{{{
     syntax match XtermColorTableComment ';.*'
     highlight link XtermColorTableComment Comment
 
-    let lines = []
-    call add(lines, "; # to copy current color (yiw)")
-    call add(lines, "; t to toggle RGB visibility")
-    call add(lines, "; f to set RGB foreground color")
+    let help = []
+    call add(help, "; # to copy current color (yiw)")
+    call add(help, "; t to toggle RGB visibility")
+    call add(help, "; f to set RGB foreground color")
 
-    return lines
+    return help
 endfunction "}}}
 
 
@@ -245,7 +245,7 @@ endfunction "}}}
 
 function! <SID>ClearTable(abuf) "{{{
     if !len(<SID>TableList(a:abuf))
-        " remove global styles
+        " Remove global styles
         for n in range(0, 0xff)
             execute 'silent! highlight clear fg_'.n
             execute 'silent! highlight clear bg_'.n
@@ -256,7 +256,7 @@ function! <SID>ClearTable(abuf) "{{{
         silent! syntax clear XtermColorTableComment
         silent! highlight clear XtermColorTableComment
 
-        " remove unnecessary global handlers
+        " Remove unnecessary global handlers
         autocmd! XtermColorTable ColorScheme
     endif
 endfunction "}}}
