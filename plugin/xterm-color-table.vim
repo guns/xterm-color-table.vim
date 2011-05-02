@@ -15,9 +15,9 @@
 "
 "   * Provides command :XtermColorTable, as well as variants for different splits
 "   * Xterm numbers on the left, equivalent RGB values on the right
-"   * Press `#` to yank current color (shortcut for yiw)
-"   * Press `t` to toggle RGB text visibility
-"   * Press `f` to set RGB text to current color
+"   * Press `#` to yank current color
+"   * Press `t` to toggle RGB visibility
+"   * Press `f` to set and yank RGB foreground color
 "   * Buffer behavior similar to Scratch.vim
 "
 " TODO:
@@ -170,9 +170,9 @@ function! <SID>SetBufferOptions() "{{{
     let b:XtermColorTableRgbVisible = 0
     let b:XtermColorTableBGF = -2
 
-    nmap <silent><buffer> # yiw:echo 'yanked: '.@"<CR>
+    nmap <silent><buffer> # :call <SID>YankColor()<CR>
     nmap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
-    nmap <silent><buffer> f :call <SID>SetRgbForeground(expand('<cword>'))<CR>
+    nmap <silent><buffer> f #:call <SID>SetRgbForeground(expand('<cword>'))<CR>
 
     " Colorschemes often call `highlight clear';
     " register a handler to deal with this
@@ -206,9 +206,9 @@ function! <SID>HelpComment() "{{{
     highlight link XtermColorTableComment Comment
 
     let help = []
-    call add(help, "; # to copy current color (yiw)")
+    call add(help, "; # to yank current color")
     call add(help, "; t to toggle RGB visibility")
-    call add(help, "; f to set RGB foreground color")
+    call add(help, "; f to set and yank RGB foreground color")
 
     return help
 endfunction "}}}
@@ -260,6 +260,13 @@ function! <SID>ClearTable(abuf) "{{{
         autocmd! XtermColorTable ColorScheme
     endif
 endfunction "}}}
+
+
+function! <SID>YankColor()
+    call search('\v\w', 'c', line('.'))
+    normal yiw
+    echo 'Yanked: '.@"
+endfunction
 
 
 function! <SID>TableList(bufnr) "{{{
