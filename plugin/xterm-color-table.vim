@@ -154,6 +154,7 @@ endfunction "}}}
 function! <SID>SetBufferOptions() "{{{
     setlocal buflisted          " should appear in buffer lists
     setlocal buftype=nofile     " special non-file buffer, freezes bufname
+    setlocal bufhidden=hide     " act like a normal buffer when window closes
     setlocal iskeyword+=#       " for easy yanking of RGB hex values
     setlocal nomodifiable       " do not allow editing
     setlocal noswapfile         " don't need backups
@@ -244,6 +245,9 @@ function! <SID>ClearTable(abuf) "{{{
             execute 'silent! syntax clear fg_'.n
             execute 'silent! syntax clear bg_'.n
         endfor
+
+        silent! syntax clear XtermColorTableComment
+        silent! highlight clear XtermColorTableComment
 
         " remove unnecessary global handlers
         autocmd! XtermColorTable ColorScheme
