@@ -91,12 +91,20 @@ function! <SID>ColorTable() "{{{
         endif
     endfor
 
-    if &modifiable
-        call append(0, rows)
-        call append(len(rows) + 1, <SID>HelpComment())
-        call <SID>SetBufferOptions()
-        call <SID>SetWindowOptions()
-    endif
+    " Since `buftype=nofile', BufNewFile events are fired every time the buffer
+    " is reloaded, since the corresponding file does not exist.
+    "
+    " Furthermore, th buffer loses its contents, but retains its settings,
+    " which may include `set nomodifiable'
+    "
+    " We have been careful to never add syntax items or highlight groups without
+    " clearing them first, so we can allow the buffer to repopulate itself
+    setlocal modifiable
+
+    call append(0, rows)
+    call append(len(rows) + 1, <SID>HelpComment())
+    call <SID>SetBufferOptions()
+    call <SID>SetWindowOptions()
 endfunction "}}}
 
 
