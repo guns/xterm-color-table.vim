@@ -1,4 +1,3 @@
-
 "   ___  __)                   )   ___                  ______)
 "  (,  |/                     (__/_____)   /)          (, /      /)  /)
 "      |  _/_  _  __  ____      /      ___// _____       /  _   (/_ //  _
@@ -18,6 +17,7 @@
 "   * Press `#` to yank current color
 "   * Press `t` to toggle RGB visibility
 "   * Press `f` to set and yank RGB foreground color
+"   * Press `x` to toggle zoom
 "   * Buffer behavior similar to Scratch.vim
 "
 " TODO:
@@ -173,6 +173,7 @@ function! <SID>SetBufferOptions() "{{{
     nmap <silent><buffer> # :call <SID>YankColor()<CR>
     nmap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
     nmap <silent><buffer> f #:call <SID>SetRgbForeground(expand('<cword>'))<CR>
+    nmap <silent><buffer> x :call <SID>ZoomTable()<CR>
 
     " Colorschemes often call `highlight clear';
     " register a handler to deal with this
@@ -209,6 +210,7 @@ function! <SID>HelpComment() "{{{
     call add(help, "; # to yank current color")
     call add(help, "; t to toggle RGB visibility")
     call add(help, "; f to set and yank RGB foreground color")
+    call add(help, "; x to toggle zoom")
 
     return help
 endfunction "}}}
@@ -262,11 +264,25 @@ function! <SID>ClearTable(abuf) "{{{
 endfunction "}}}
 
 
-function! <SID>YankColor()
+function! <SID>YankColor() "{{{
     call search('\v\w', 'c', line('.'))
     normal yiw
     echo 'Yanked: '.@"
-endfunction
+endfunction "}}}
+
+
+function! <SID>ZoomTable() "{{{
+    if exists('b:XtermColorTableZoomed') && b:XtermColorTableZoomed
+        execute 'silent! resize '.b:XtermColorTableDimensions[0]
+        execute 'silent! vertical resize '.b:XtermColorTableDimensions[1]
+        let b:XtermColorTableZoomed = 0
+    else
+        let b:XtermColorTableDimensions = [winheight(0), winwidth(0)]
+        execute 'silent! resize'
+        execute 'silent! vertical resize'
+        let b:XtermColorTableZoomed = 1
+    endif
+endfunction "}}}
 
 
 function! <SID>TableList(bufnr) "{{{
