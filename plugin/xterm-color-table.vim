@@ -208,9 +208,9 @@ function! <SID>HelpComment() "{{{
 
     let help = []
     call add(help, "; # to yank current color")
+    call add(help, "; f to yank and set RGB foreground color")
     call add(help, "; t to toggle RGB visibility")
-    call add(help, "; f to set and yank RGB foreground color")
-    call add(help, "; x to toggle zoom")
+    call add(help, "; x to toggle zoom state")
 
     return help
 endfunction "}}}
