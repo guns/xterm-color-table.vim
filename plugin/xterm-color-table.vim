@@ -1,10 +1,11 @@
-"   ___  __)                   )   ___                  ______)
-"  (,  |/                     (__/_____)   /)          (, /      /)  /)
-"      |  _/_  _  __  ____      /      ___// _____       /  _   (/_ //  _
-"   ) /|_ (___(/_/ (_/ / /_  (_/      (_)(/_(_)/ (_   ) /  (_(_/_) (/__(/_
-"  (_/                        (______)               (_/
+
+"   ___  __)                  )   ___                  ______)
+"  (,  |/                    (__/_____)   /)          (, /      /)  /)
+"      |  _/_  _  __  ____     /      ___// _____       /  _   (/_ //  _
+"   ) /|_ (___(/_/ (_/ / /_   /      (_)(/_(_)/ (_   ) /  (_(_/_) (/__(/_
+"  (_/                       (______)               (_/
 "
-"                                           guns <self@sungpae.com>
+"                                          guns <self@sungpae.com>
 
 " Version:  1.6
 " License:  MIT
@@ -93,7 +94,7 @@ function! <SID>ColorTable() "{{{
     " Since `buftype=nofile', BufNewFile events are fired every time the buffer
     " is reloaded, since the corresponding file does not exist.
     "
-    " Furthermore, th buffer loses its contents, but retains its settings,
+    " Furthermore, the buffer loses its contents, but retains its settings,
     " which may include `set nomodifiable'
     "
     " We have been careful to never add syntax items or highlight groups without
