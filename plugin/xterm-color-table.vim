@@ -46,10 +46,11 @@ if !exists('g:XtermColorTableDefaultOpen')
 endif
 
 
-command! XtermColorTable  execute 'call <SID>XtermColorTable(g:XtermColorTableDefaultOpen)'
+command! XtermColorTable  call <SID>XtermColorTable('')
 command! SXtermColorTable call <SID>XtermColorTable('split')
 command! VXtermColorTable call <SID>XtermColorTable('vsplit')
 command! TXtermColorTable call <SID>XtermColorTable('tabnew')
+command! TXtermColorTable call <SID>XtermColorTable('edit')
 command! OXtermColorTable call <SID>XtermColorTable('edit') | silent! only "}}}
 
 
@@ -60,20 +61,41 @@ augroup END "}}}
 
 
 function! <SID>XtermColorTable(open) "{{{
+    let open  = empty(a:open) ? g:XtermColorTableDefaultOpen : a:open
     let bufid = bufnr(s:bufname)
     let winid = bufwinnr(bufid)
+    let reopening = 1
 
     if bufid == -1
         " Create new buffer
-        execute a:open.' '.s:bufname
+        execute open.' '.s:bufname
+        call setbufvar(bufnr(s:bufname), 'XtermColorTableOpenState', open)
         return
     elseif winid != -1 && winnr('$') > 1
-        " Close extant window
-        execute winid.'wincmd w' | close
+        " Switch to extant window
+        execute winid.'wincmd w'
+
+        " Stop if opening type not given or is the same as the buffer's type
+        if empty(a:open) || b:XtermColorTableOpenState == open
+            return
+        endif
+
+        " Close window unless we are reusing it
+        if open =~# '\v^edit'
+            reopening = 0
+        else
+            close
+        endif
     endif
 
     " Open extant buffer
-    execute a:open.' +buffer'.bufid
+    execute open.' +buffer'.bufid
+    call setbufvar(bufid, b:XtermColorTableOpenState, open)
+
+    " Restore dimensions if we are reopening a hidden buffer
+    " if reopening
+    "     call <SID>ZoomTable(1)
+    " endif
 endfunction "}}}
 
 
@@ -170,22 +192,27 @@ function! <SID>SetBufferOptions() "{{{
 
     let b:XtermColorTableRgbVisible = 0
     let b:XtermColorTableBGF = -2
+    let b:XtermColorTableZoomed = 0
+
+    call <SID>SetTableDimensions(bufnr('%'))
 
     nmap <silent><buffer> # :call <SID>YankColor()<CR>
+    nmap <silent><buffer> f :call <SID>YankColor()<CR>:call <SID>SetRgbForeground(expand('<cword>'))<CR>
     nmap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
-    nmap <silent><buffer> f #:call <SID>SetRgbForeground(expand('<cword>'))<CR>
     nmap <silent><buffer> x :call <SID>ZoomTable()<CR>
 
     " Colorschemes often call `highlight clear';
     " register a handler to deal with this
     augroup XtermColorTable
+        autocmd! ColorScheme
         autocmd ColorScheme * silent! doautoall XtermColorTableBuffer ColorScheme
     augroup END
 
     augroup XtermColorTableBuffer
         autocmd! * <buffer>
         autocmd ColorScheme <buffer> call <SID>HighlightTable(-1)
-        autocmd BufUnload   <buffer> call <SID>ClearTable(expand('<abuf>'))
+        autocmd BufWinLeave <buffer> call <SID>SetTableDimensions(str2nr(expand('<abuf>')))
+        autocmd BufUnload   <buffer> call <SID>ClearTable(str2nr(expand('<abuf>')))
     augroup END
 endfunction "}}}
 
@@ -272,13 +299,18 @@ function! <SID>YankColor() "{{{
 endfunction "}}}
 
 
-function! <SID>ZoomTable() "{{{
-    if exists('b:XtermColorTableZoomed') && b:XtermColorTableZoomed
-        execute 'silent! resize '.b:XtermColorTableDimensions[0]
-        execute 'silent! vertical resize '.b:XtermColorTableDimensions[1]
+function! <SID>ZoomTable(...) "{{{
+    let zoomed = b:XtermColorTableZoomed
+    if a:0
+        let zoomed = (zoomed + 1) % 2
+    endif
+
+    if zoomed
+        let [height, width] = <SID>GetTableDimensions(bufnr('%'))
+        execute 'silent! resize '.height
+        execute 'silent! vertical resize '.width
         let b:XtermColorTableZoomed = 0
     else
-        let b:XtermColorTableDimensions = [winheight(0), winwidth(0)]
         execute 'silent! resize'
         execute 'silent! vertical resize'
         let b:XtermColorTableZoomed = 1
@@ -286,8 +318,22 @@ function! <SID>ZoomTable() "{{{
 endfunction "}}}
 
 
-function! <SID>TableList(bufnr) "{{{
-    return filter(range(1, bufnr('$')), '(bufname(v:val) == s:bufname) && (v:val != a:bufnr)')
+function! <SID>SetTableDimensions(bufid) "{{{
+    " Only set when not zoomed
+    if !getbufvar(a:bufid, 'XtermColorTableZoomed')
+        let winid = bufwinnr(a:bufid)
+        call setbufvar(a:bufid, 'XtermColorTableDimensions', [winheight(winid), winwidth(winid)])
+    endif
+endfunction "}}}
+
+
+function! <SID>GetTableDimensions(bufid) "{{{
+    return getbufvar(a:bufid, 'XtermColorTableDimensions')
+endfunction "}}}
+
+
+function! <SID>TableList(bufid) "{{{
+    return filter(range(1, bufnr('$')), '(bufname(v:val) == s:bufname) && (v:val != a:bufid)')
 endfunction "}}}
 
 
