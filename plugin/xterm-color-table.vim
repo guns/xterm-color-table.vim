@@ -26,7 +26,6 @@
 "   * http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
 "   * http://www.vim.org/scripts/script.php?script_id=664
 
-
 " We have a dependency on buffer-local autocommands
 if version < 700
     echo 'FAIL: XtermColorTable requires vim 7.0+'
@@ -39,7 +38,6 @@ if !exists('g:XtermColorTableDefaultOpen')
     let g:XtermColorTableDefaultOpen = 'split'
 endif
 
-
 command! XtermColorTable  execute 'call <SID>XtermColorTable(g:XtermColorTableDefaultOpen)'
 command! SXtermColorTable call <SID>XtermColorTable('split')
 command! VXtermColorTable call <SID>XtermColorTable('vsplit')
@@ -47,15 +45,13 @@ command! TXtermColorTable call <SID>XtermColorTable('tabnew')
 command! EXtermColorTable call <SID>XtermColorTable('edit')
 command! OXtermColorTable call <SID>XtermColorTable('edit') | only
 
-
-augroup XtermColorTable "{{{
+augroup XtermColorTable
     autocmd!
     autocmd BufNewFile  __XtermColorTable__ call <SID>ColorTable()
     autocmd ColorScheme *                   silent! doautoall XtermColorTableBuffer ColorScheme
-augroup END "}}}
+augroup END
 
-
-function! <SID>XtermColorTable(open) "{{{
+function! <SID>XtermColorTable(open)
     let bufid = bufnr(s:bufname)
     let winid = bufwinnr(bufid)
 
@@ -70,10 +66,9 @@ function! <SID>XtermColorTable(open) "{{{
 
     " Open extant buffer
     execute a:open.' +buffer'.bufid
-endfunction "}}}
+endfunction
 
-
-function! <SID>ColorTable() "{{{
+function! <SID>ColorTable()
     let rows = []
 
     call add(rows, <SID>ColorRow(0,  7))
@@ -92,15 +87,13 @@ function! <SID>ColorTable() "{{{
         call append(len(rows) + 1, <SID>HelpComment())
         call <SID>SetBufferOptions()
     endif
-endfunction "}}}
+endfunction
 
-
-function! <SID>ColorRow(start, end) "{{{
+function! <SID>ColorRow(start, end)
     return join(map(range(a:start, a:end), '<SID>ColorCell(v:val)'))
-endfunction "}}}
+endfunction
 
-
-function! <SID>ColorCell(n) "{{{
+function! <SID>ColorCell(n)
     let rgb = s:xterm_colors[a:n]
 
     " Clear extant values
@@ -113,10 +106,9 @@ function! <SID>ColorCell(n) "{{{
     call <SID>HighlightCell(a:n, -1)
 
     return printf(' %3s %7s', a:n, rgb)
-endfunction "}}}
+endfunction
 
-
-function! <SID>HighlightCell(n, bgf) "{{{
+function! <SID>HighlightCell(n, bgf)
     let rgb = s:xterm_colors[a:n]
 
     " bgf has three states:
@@ -143,10 +135,9 @@ function! <SID>HighlightCell(n, bgf) "{{{
     execute 'highlight fg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
     execute 'highlight bg_'.a:n.' ctermbg='.a:n.' guibg='.rgb
     execute 'highlight bg_'.a:n.' ctermfg='.bgf.' guifg='.s:xterm_colors[bgf]
-endfunction "}}}
+endfunction
 
-
-function! <SID>SetBufferOptions() "{{{
+function! <SID>SetBufferOptions()
     setlocal buftype=nofile bufhidden=hide buflisted
     setlocal nomodified nomodifiable noswapfile readonly
     setlocal nocursorline nocursorcolumn
@@ -165,10 +156,9 @@ function! <SID>SetBufferOptions() "{{{
         autocmd! * <buffer>
         autocmd ColorScheme <buffer> call <SID>HighlightTable(-1)
     augroup END
-endfunction "}}}
+endfunction
 
-
-function! <SID>HelpComment() "{{{
+function! <SID>HelpComment()
     " we have to define our own comment type
     silent! syntax clear XtermColorTableComment
     syntax match XtermColorTableComment ';.*'
@@ -180,23 +170,20 @@ function! <SID>HelpComment() "{{{
     call add(lines, "; f to set RGB foreground color")
 
     return lines
-endfunction "}}}
+endfunction
 
-
-function! <SID>ToggleRgbVisibility() "{{{
+function! <SID>ToggleRgbVisibility()
     let bgf = b:XtermColorTableRgbVisible ? -1 : b:XtermColorTableBGF
     let b:XtermColorTableRgbVisible = (b:XtermColorTableRgbVisible + 1) % 2
 
     call <SID>HighlightTable(bgf)
-endfunction "}}}
+endfunction
 
-
-function! <SID>HighlightTable(bgf) "{{{
+function! <SID>HighlightTable(bgf)
     for val in range(0, 0xff) | call <SID>HighlightCell(val, a:bgf) | endfor
-endfunction "}}}
+endfunction
 
-
-function! <SID>SetRgbForeground(cword) "{{{
+function! <SID>SetRgbForeground(cword)
     if len(a:cword)
         let sname = synIDattr(synID(line('.'), col('.'), 0), 'name')
         let b:XtermColorTableBGF = substitute(sname, '\v^\w+_', '', '') + 0
@@ -209,10 +196,9 @@ function! <SID>SetRgbForeground(cword) "{{{
     else
         call <SID>ToggleRgbVisibility()
     endif
-endfunction "}}}
+endfunction
 
-
-""" Xterm 256 color dictionary {{{
+""" Xterm 256 color dictionary
 
 let s:xterm_colors = {
     \ '0':   '#000000', '1':   '#800000', '2':   '#008000', '3':   '#808000', '4':   '#000080',
@@ -267,5 +253,3 @@ let s:xterm_colors = {
     \ '245': '#8a8a8a', '246': '#949494', '247': '#9e9e9e', '248': '#a8a8a8', '249': '#b2b2b2',
     \ '250': '#bcbcbc', '251': '#c6c6c6', '252': '#d0d0d0', '253': '#dadada', '254': '#e4e4e4',
     \ '255': '#eeeeee', 'fg': 'fg', 'bg': 'bg', 'NONE': 'NONE' }
-
-"}}}
