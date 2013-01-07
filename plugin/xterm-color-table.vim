@@ -38,7 +38,7 @@ if !exists('g:XtermColorTableDefaultOpen')
     let g:XtermColorTableDefaultOpen = 'split'
 endif
 
-command! XtermColorTable  execute 'call <SID>XtermColorTable(g:XtermColorTableDefaultOpen)'
+command! XtermColorTable  call <SID>XtermColorTable()
 command! SXtermColorTable call <SID>XtermColorTable('split')
 command! VXtermColorTable call <SID>XtermColorTable('vsplit')
 command! TXtermColorTable call <SID>XtermColorTable('tabnew')
@@ -51,21 +51,22 @@ augroup XtermColorTable
     autocmd ColorScheme *                   silent! doautoall XtermColorTableBuffer ColorScheme
 augroup END
 
-function! <SID>XtermColorTable(open)
+function! s:XtermColorTable(...)
     let bufid = bufnr(s:bufname)
     let winid = bufwinnr(bufid)
+    let open = a:0 ? a:1 : g:XtermColorTableDefaultOpen
 
     if bufid == -1
         " Create new buffer
-        execute a:open.' '.s:bufname
+        execute open . ' ' . s:bufname
         return
     elseif winid != -1 && winnr('$') > 1
         " Close extant window
-        execute winid.'wincmd w' | close
+        execute winid . 'wincmd w' | close
     endif
 
     " Open extant buffer
-    execute a:open.' +buffer'.bufid
+    execute open . ' +buffer' . bufid
 endfunction
 
 function! <SID>ColorTable()
