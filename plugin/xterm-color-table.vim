@@ -142,6 +142,7 @@ function! <SID>SetBufferOptions()
     setlocal nomodified nomodifiable noswapfile readonly
     setlocal nocursorline nocursorcolumn
     setlocal iskeyword+=#
+    setlocal nospell
 
     let b:XtermColorTableRgbVisible = 0
     let b:XtermColorTableBGF = -2
