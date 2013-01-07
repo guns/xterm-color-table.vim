@@ -69,15 +69,15 @@ function! s:XtermColorTable(...)
     execute open . ' +buffer' . bufid
 endfunction
 
-function! <SID>ColorTable()
+function! s:ColorTable()
     let rows = []
 
-    call add(rows, <SID>ColorRow(0,  7))
-    call add(rows, <SID>ColorRow(8, 15))
+    call add(rows, s:ColorRow(0,  7))
+    call add(rows, s:ColorRow(8, 15))
     call add(rows, '')
 
     for lnum in range(16, 250, 6)
-        call add(rows, <SID>ColorRow(lnum, lnum + 5))
+        call add(rows, s:ColorRow(lnum, lnum + 5))
         if lnum == 226
             call add(rows, '')
         endif
@@ -85,31 +85,31 @@ function! <SID>ColorTable()
 
     if &modifiable
         call append(0, rows)
-        call append(len(rows) + 1, <SID>HelpComment())
-        call <SID>SetBufferOptions()
+        call append(len(rows) + 1, s:HelpComment())
+        call s:SetBufferOptions()
     endif
 endfunction
 
-function! <SID>ColorRow(start, end)
-    return join(map(range(a:start, a:end), '<SID>ColorCell(v:val)'))
+function! s:ColorRow(start, end)
+    return join(map(range(a:start, a:end), 's:ColorCell(v:val)'))
 endfunction
 
-function! <SID>ColorCell(n)
+function! s:ColorCell(n)
     let rgb = s:xterm_colors[a:n]
 
     " Clear extant values
-    execute 'silent! syntax clear fg_'.a:n
-    execute 'silent! syntax clear bg_'.a:n
+    execute 'silent! syntax clear fg_' . a:n
+    execute 'silent! syntax clear bg_' . a:n
 
-    execute 'syntax match fg_'.a:n.' " '.a:n.' " containedin=ALL'
-    execute 'syntax match bg_'.a:n.' "'. rgb .'" containedin=ALL'
+    execute 'syntax match fg_' . a:n . ' " ' . a:n . ' " containedin=ALL'
+    execute 'syntax match bg_' . a:n . ' "'  . rgb . '" containedin=ALL'
 
-    call <SID>HighlightCell(a:n, -1)
+    call s:HighlightCell(a:n, -1)
 
     return printf(' %3s %7s', a:n, rgb)
 endfunction
 
-function! <SID>HighlightCell(n, bgf)
+function! s:HighlightCell(n, bgf)
     let rgb = s:xterm_colors[a:n]
 
     " bgf has three states:
@@ -130,15 +130,15 @@ function! <SID>HighlightCell(n, bgf)
     endif
 
     " Clear any extant values
-    execute 'silent! highlight clear fg_'.a:n
-    execute 'silent! highlight clear bg_'.a:n
+    execute 'silent! highlight clear fg_' . a:n
+    execute 'silent! highlight clear bg_' . a:n
 
-    execute 'highlight fg_'.a:n.' ctermfg='.a:n.' guifg='.rgb
-    execute 'highlight bg_'.a:n.' ctermbg='.a:n.' guibg='.rgb
-    execute 'highlight bg_'.a:n.' ctermfg='.bgf.' guifg='.s:xterm_colors[bgf]
+    execute 'highlight fg_' . a:n . ' ctermfg=' . a:n . ' guifg=' . rgb
+    execute 'highlight bg_' . a:n . ' ctermbg=' . a:n . ' guibg=' . rgb
+    execute 'highlight bg_' . a:n . ' ctermfg=' . bgf . ' guifg=' . s:xterm_colors[bgf]
 endfunction
 
-function! <SID>SetBufferOptions()
+function! s:SetBufferOptions()
     setlocal buftype=nofile bufhidden=hide buflisted
     setlocal nomodified nomodifiable noswapfile readonly
     setlocal nocursorline nocursorcolumn
@@ -148,7 +148,7 @@ function! <SID>SetBufferOptions()
     let b:XtermColorTableRgbVisible = 0
     let b:XtermColorTableBGF = -2
 
-    nmap <silent><buffer> # yiw:echo 'yanked: '.@"<CR>
+    nmap <silent><buffer> # yiw:echo 'yanked: ' . @"<CR>
     nmap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
     nmap <silent><buffer> f :call <SID>SetRgbForeground(expand('<cword>'))<CR>
 
@@ -156,11 +156,11 @@ function! <SID>SetBufferOptions()
     " register a handler to deal with this
     augroup XtermColorTableBuffer
         autocmd! * <buffer>
-        autocmd ColorScheme <buffer> call <SID>HighlightTable(-1)
+        autocmd ColorScheme <buffer> call s:HighlightTable(-1)
     augroup END
 endfunction
 
-function! <SID>HelpComment()
+function! s:HelpComment()
     " we have to define our own comment type
     silent! syntax clear XtermColorTableComment
     syntax match XtermColorTableComment ';.*'
@@ -174,18 +174,18 @@ function! <SID>HelpComment()
     return lines
 endfunction
 
-function! <SID>ToggleRgbVisibility()
+function! s:ToggleRgbVisibility()
     let bgf = b:XtermColorTableRgbVisible ? -1 : b:XtermColorTableBGF
     let b:XtermColorTableRgbVisible = (b:XtermColorTableRgbVisible + 1) % 2
 
-    call <SID>HighlightTable(bgf)
+    call s:HighlightTable(bgf)
 endfunction
 
-function! <SID>HighlightTable(bgf)
-    for val in range(0, 0xff) | call <SID>HighlightCell(val, a:bgf) | endfor
+function! s:HighlightTable(bgf)
+    for val in range(0, 0xff) | call s:HighlightCell(val, a:bgf) | endfor
 endfunction
 
-function! <SID>SetRgbForeground(cword)
+function! s:SetRgbForeground(cword)
     if len(a:cword)
         let sname = synIDattr(synID(line('.'), col('.'), 0), 'name')
         let b:XtermColorTableBGF = substitute(sname, '\v^\w+_', '', '') + 0
@@ -194,9 +194,9 @@ function! <SID>SetRgbForeground(cword)
     endif
 
     if b:XtermColorTableRgbVisible
-        call <SID>HighlightTable(b:XtermColorTableBGF)
+        call s:HighlightTable(b:XtermColorTableBGF)
     else
-        call <SID>ToggleRgbVisibility()
+        call s:ToggleRgbVisibility()
     endif
 endfunction
 
