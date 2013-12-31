@@ -1,4 +1,4 @@
-All 256 xterm colors with their RGB equivalents!	*XtermColorTable*
+*xterm-color-table.txt*	All 256 xterm colors with their RGB equivalents!
 
      ___  __)                  )   ___                  ______)
     (,  |/                    (__/_____)   /)          (, /      /)  /)
