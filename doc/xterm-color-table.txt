@@ -29,6 +29,11 @@ Commands
 							*OXtermColorTable*
 :OXtermColorTable	Same, but (re)open and make it the only window
 
+							*XtermColorHighlight*
+:XtermColorHighlight	Highlight Xterm color code numbers (0 through 255)
+
+							*XtermColorHighlightOff*
+:XtermColorHighlightOff	Turn off highlighting for Xterm color code numbers
 
 ==============================================================================
 Options
