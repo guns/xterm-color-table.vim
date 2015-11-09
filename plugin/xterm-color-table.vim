@@ -44,6 +44,8 @@ command! VXtermColorTable call <SID>XtermColorTable('vsplit')
 command! TXtermColorTable call <SID>XtermColorTable('tabnew')
 command! EXtermColorTable call <SID>XtermColorTable('edit')
 command! OXtermColorTable call <SID>XtermColorTable('edit') | only
+command! XtermColorHighlight call <SID>HighlightCodes(1)
+command! XtermColorHighlightOff call <SID>HighlightCodes(0)
 
 augroup XtermColorTable
     autocmd!
@@ -183,6 +185,19 @@ endfunction
 
 function! s:HighlightTable(bgf)
     for val in range(0, 0xff) | call s:HighlightCell(val, a:bgf) | endfor
+endfunction
+
+function! s:HighlightCodes(enable)
+    for val in range(0, 0xff)
+        " Clear extant values
+        execute 'silent! syntax clear fg_' . val
+        execute 'silent! highlight clear fg_' . val
+        if a:enable
+            let rgb = s:xterm_colors[val]
+            execute 'syntax match fg_' . val . ' "\%(^\|\<\|\D\)\@1<=' . val . '\%($\|\>\|\D\)\@1=" containedin=ALL'
+            execute 'highlight fg_' . val . ' ctermfg=' . val . ' guifg=' . rgb
+        endif
+    endfor
 endfunction
 
 function! s:SetRgbForeground(cword)
