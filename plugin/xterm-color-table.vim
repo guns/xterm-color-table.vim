@@ -102,7 +102,7 @@ function! s:ColorCell(n)
     execute 'silent! syntax clear bg_' . a:n
 
     execute 'syntax match fg_' . a:n . ' " ' . a:n . ' " containedin=ALL'
-    execute 'syntax match bg_' . a:n . ' "'  . rgb . '" containedin=ALL'
+	execute 'syntax match bg_' . a:n . ' " ' . a:n . ' #[a-f0-9]\{6\}" containedin=ALL contains=fg_' . a:n
 
     call s:HighlightCell(a:n, -1)
 
