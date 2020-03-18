@@ -148,9 +148,9 @@ function! s:SetBufferOptions()
     let b:XtermColorTableRgbVisible = 0
     let b:XtermColorTableBGF = -2
 
-    nmap <silent><buffer> # yiw:echo 'yanked: ' . @"<CR>
-    nmap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
-    nmap <silent><buffer> f :call <SID>SetRgbForeground(expand('<cword>'))<CR>
+    nnoremap <silent><buffer> # yiw:echo 'yanked: ' . @"<CR>
+    nnoremap <silent><buffer> t :call <SID>ToggleRgbVisibility()<CR>
+    nnoremap <silent><buffer> f :call <SID>SetRgbForeground(expand('<cword>'))<CR>
 
     " Colorschemes often call `highlight clear';
     " register a handler to deal with this
